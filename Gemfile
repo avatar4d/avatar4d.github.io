@@ -32,6 +32,11 @@ end
 # do not have a Java counterpart.
 #gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
-gem "webrick", "~> 1.8"
+# webrick is required to build locally, but unsupported by github-pages
+# The check below ensures it is only added for local builds and removes the github-actions build warning
+# workaround provided from https://github.com/github/pages-gem/issues/887
+install_if -> { ENV["GITHUB_ACTIONS"] != "true" } do
+    puts "Is GitHub action: #{ENV["GITHUB_ACTIONS"] == "true"}"
+    gem "webrick", "~> 1.8"
+end 
 
-gem "faraday-retry", "~> 2.2"
