@@ -81,13 +81,13 @@ Reviewing the policy for OpenSSH reveals the necessary changes:
 ~> cat /etc/crypto-policies/back-ends/openssh.config
 ```
 
-I identified two critical sections that needed changing. To connect, I needed to configure both options. First, I added PubKeyAcceptedAlgorithms=+ssh-rsa, a Fedora specific restriction, but encountered another error:
+I identified two critical sections that needed changing. To connect, I needed to configure both options. First, I added PubKeyAcceptedAlgorithms=+ssh-rsa, but encountered another error:
 ```
  ~> ssh 10.1.x.y -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedAlgorithms=+ssh-rsa
 Bad server host key: Invalid key length
 ```
 
-Fedora increased the default RequiredRSASize to 2048, requiring a smaller key length be enabled:
+[Fedora increased the default RequiredRSASize to 2048 in Fedora 33](https://fedoraproject.org/wiki/Changes/StrongCryptoSettings2), requiring a smaller key length be enabled:
 ```
 ~> ssh 10.1.x.y -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedAlgorithms=+ssh-rsa -oRequiredRSASize=+1024
 (gp@10.1.x.y) Password:
