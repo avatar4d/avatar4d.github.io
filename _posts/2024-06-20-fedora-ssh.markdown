@@ -49,6 +49,7 @@ Unable to negotiate with 10.1.x.y port 22: no matching host key type found. Thei
 ```
 
 <br>
+
 # Troubleshooting on Fedora
 On Mac or [Pop!_OS](https://pop.system76.com/), the following command addresses the last error, but, as mentioned, Fedora requires additional steps:
 
@@ -64,6 +65,7 @@ The proposed HostKeyAlgorithms during KEX are limited to the set of algorithms  
                crypto_policies(7).  crypto_policies(7) can not handle the list of host key algorithms directly as doing so would break the order given by the known_hosts file.
 ```
 <br>
+
 # Adjusting Fedora’s Crypto Policies
 I discovered that Fedora/RedHat's crypto policies impact OpenSSH. According to the manual for crypto_policies, these policies are configured in:
 
@@ -95,8 +97,15 @@ Fedora increased the default RequiredRSASize to 2048, requiring a smaller key le
 **IT WORKS!**
 <br>
 <br>
+
 # Conclusion
-I don't really see the value that PubkeyAcceptedAlgorithms adds over and above HostKeyAlgorithms, which is already found in upstream OpenSSH. I suspect it has something to do about having a centralized place to control broader system policy in [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux). I do see value in increasing RequiredRSASize though and happy that Fedora appears to be thinking about security.
+For some reason Fedora and [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux) have decided the available HostKeyAlgorithms is dependent on the enabled PubkeyAcceptedAlgorithms. Therefore it is requried even when connecting via password authentication. That said, it is a better policy to require key-based authentication and disable password-only auth, which I already do on my *nix-based servers. I should really do the same with my network gear as well. Also, I see the value in increasing RequiredRSASize and happy that Fedora appears to be thinking about security.  
+
+<br>
+
+Note: [RequiredRSASize was added in OpenSSH 9.1](https://undeadly.org/cgi?action=article;sid=20220930130101)
+
+<br>
 
 With this setup, my ~/.ssh/config file on Fedora now looks like:
 
